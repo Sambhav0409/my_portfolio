@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sambhav Sachdeva - Robotics Innovator</title>
+    <style>
+        :root {
+            --primary: #00f7ff;
+            --secondary: #ff2a6d;
+            --accent: #05d9e8;
+            --bg-dark: #000814;
+            --bg-light: #001d3d;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        @font-face {
+            font-family: 'Rajdhani';
+            src: url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        }
+
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* 3D Scene Container */
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Main Layout */
+        #app {
+            display: grid;
+            grid-template-areas:
+                "header"
+                "main"
+                "footer";
+            grid-template-rows: auto 1fr auto;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            grid-area: header;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,8,20,0.9) 0%, rgba(0,8,20,0) 100%);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-title {
+            font-size: 4rem;
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary);
+            letter-spacing: 4px;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .header-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-tagline {
+            font-size: 1.2rem;
+            color: var(--accent);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Navigation */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        main {
+            grid-area: main;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        .section {
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+            padding: 2rem;
+            background: rgba(0, 29, 61, 0.5);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 247, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 247, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .about-highlight {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .about-image {
+            position: relative;
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 247, 255, 0.2);
+            border: 1px solid var(--primary);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Education Timeline */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            padding: 2rem;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 3rem;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 3rem;
+            text-align: left;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+
+        .timeline-date {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-subtitle {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-description {
+            color: var(--text-secondary);
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: rgba(0, 53, 102, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 247, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 247, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .skill-category-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 247, 255, 0.3);
+        }
+
+        .skill-list {
+            list-style-type: none;
+        }
+
+        .skill-item {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .skill-item::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Projects Section */
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(0, 53, 102, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 247, 255, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 247, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .project-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-tag {
+            background: rgba(0, 247, 255, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: var(--accent);
+        }
+
+        /* Internship Section */
+        .internship-timeline {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .internship-item {
+            background: rgba(0, 53, 102, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .internship-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 247, 255, 0.1);
+        }
+
+        .internship-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .internship-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+
+        .internship-date {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .internship-company {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .internship-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .internship-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 247, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .contact-text {
+            color: var(--text-secondary);
+        }
+
+        .contact-link {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .contact-form {
+            background: rgba(0, 53, 102, 0.3);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 247, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 247, 255, 0.05);
+            border: 1px solid rgba(0, 247, 255, 0.2);
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 247, 255, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 247, 255, 0.3);
+        }
+
+        /* Interactive Terminal */
+        .terminal-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 400px;
+            background: rgba(0, 20, 30, 0.95);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 247, 255, 0.2);
+            overflow: hidden;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .terminal-widget.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .terminal-header {
+            background: rgba(0, 247, 255, 0.1);
+            padding: 0.5rem 1rem;
+            color: var(--primary);
+            font-weight: bold;
+            border-bottom: 1px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-close {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .terminal-close:hover {
+            color: var(--secondary);
+        }
+
+        .terminal-body {
+            padding: 1rem;
+            font-family: 'Space Mono', monospace;
+            height: 300px;
+            overflow-y: auto;
+            color: var(--text-primary);
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .terminal-prompt {
+            color: var(--primary);
+        }
+
+        .terminal-input {
+            display: flex;
+            align-items: center;
+            padding: 0 1rem 1rem;
+        }
+
+        .terminal-cursor {
+            animation: blink 1s step-end infinite;
+        }
+
+        #terminal-command {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+            padding: 0.5rem;
+            outline: none;
+            caret-color: var(--primary);
+        }
+
+        /* 3D Model Viewer */
+        .model-viewer {
+            height: 400px;
+            background: rgba(0, 53, 102, 0.3);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 247, 255, 0.2);
+        }
+
+        .model-viewer::before {
+            content: '3D Model Loading...';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            z-index: 1;
+        }
+
+        /* Footer */
+        footer {
+            grid-area: footer;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(0, 8, 20, 0.8);
+            border-top: 1px solid rgba(0, 247, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes blink {
+            from, to { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .about-content, .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-container {
+                gap: 2rem;
+            }
+            
+            .terminal-widget {
+                width: 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 0;
+                text-align: left;
+            }
+            
+            .timeline-item:nth-child(odd), 
+            .timeline-item:nth-child(even) {
+                left: 0;
+                padding-right: 0;
+                padding-left: 70px;
+                text-align: left;
+            }
+            
+            .timeline-item::after {
+                left: 20px;
+            }
+            
+            .projects-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .terminal-widget {
+                width: 100%;
+                bottom: 0;
+                right: 0;
+                border-radius: 8px 8px 0 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 2rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .main-nav {
+                gap: 1rem;
+            }
+            
+            .nav-item {
+                font-size: 1rem;
+            }
+            
+            .section {
+                padding: 1rem;
+            }
+            
+            .skill-category {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Scene Container -->
+    <div id="scene-container"></div>
+    
+    <!-- Main App Structure -->
+    <div id="app">
+        <!-- Header Section -->
+        <header>
+            <div class="header-content">
+                <h1 class="header-title">SAMBHAV SACHDEVA</h1>
+                <h2 class="header-subtitle">Robotics Engineer | Autonomous Systems Developer</h2>
+                <p class="header-tagline">Passionate about robotics, automation, and AI. Developing innovative solutions at the intersection of hardware and software.</p>
+                
+                <nav class="main-nav">
+                    <a href="#about" class="nav-item active">About</a>
+                    <a href="#education" class="nav-item">Education</a>
+                    <a href="#skills" class="nav-item">Skills</a>
+                    <!-- <a href="#projects" class="nav-item">Projects</a> -->
+                    <a href="#internships" class="nav-item">Experience</a>
+                    <a href="#contact" class="nav-item">Contact</a>
+                </nav>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main>
+            <!-- About Section -->
+            <section id="about" class="section">
+                <h2 class="section-title">About Me</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>Hello! I'm <span class="about-highlight">Sambhav Sachdeva</span>, a passionate Robotics Engineer with expertise in autonomous systems, computer vision, and embedded systems. Currently pursuing my Bachelor's in Robotics Engineering at Punjab Engineering College, Chandigarh.</p>
+                        
+                        <p>My technical skills span across <span class="about-highlight">ROS/ROS2, Gazebo simulations, computer vision (OpenCV, YOLO), and embedded systems development</span>. I have hands-on experience with robotic arms, autonomous navigation, and industrial automation systems.</p>
+                        
+                        
+                    </div>
+                    
+                    <div class="about-image">
+                        <img src="Sambhav.jpeg" alt="Sambhav Sachdeva">
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Education Section -->
+            <section id="education" class="section">
+                <h2 class="section-title">Education</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2023 - Present</div>
+                        <h3 class="timeline-title">Bachelor of Technology in Production and Industrial Engineering</h3>
+                        <p class="timeline-subtitle">Punjab Engineering College (PEC), Chandigarh</p>
+                        <p class="timeline-description">
+                            <br>
+                            
+                        </p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2020 - 2022</div>
+                        <h3 class="timeline-title">Class XII (Senior Secondary)</h3>
+                        <p class="timeline-subtitle">CBSE Board</p>
+                        <p class="timeline-description">
+                            Percentage: 86.4%<br>
+                            Stream: Science (Physics, Chemistry, Mathematics, Computer Science)<br>
+                            
+                        </p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2007 - 2020</div>
+                        <h3 class="timeline-title">Class X (Secondary)</h3>
+                        <p class="timeline-subtitle">CBSE Board</p>
+                        <p class="timeline-description">
+                            Percentage: 91.6%<br>
+                            
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Skills Section -->
+            <section id="skills" class="section">
+                <h2 class="section-title">Technical Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Robotics & Automation</h3>
+                        <ul class="skill-list">
+                            <li class="skill-item">ROS/ROS2 (Navigation2, MoveIt)</li>
+                            <li class="skill-item">Gazebo Simulation</li>
+                            <li class="skill-item">Robot Kinematics & Dynamics</li>
+                            <li class="skill-item">PID Control Systems</li>
+                            <li class="skill-item">SLAM Algorithms</li>
+                            <li class="skill-item">Industrial Automation</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Programming & Software</h3>
+                        <ul class="skill-list">
+                            <li class="skill-item">Python (Advanced)</li>
+                            <li class="skill-item">C++ (Intermediate)</li>
+                            <li class="skill-item">Embedded C</li>
+                            <li class="skill-item">MATLAB</li>
+                            <li class="skill-item">Linux System Administration</li>
+                            <li class="skill-item">Git Version Control</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Computer Vision & AI</h3>
+                        <ul class="skill-list">
+                            <li class="skill-item">OpenCV</li>
+                            <li class="skill-item">YOLO Object Detection</li>
+                            <li class="skill-item">TensorFlow/PyTorch</li>
+                            <li class="skill-item">Deep Learning</li>
+                            <li class="skill-item">Point Cloud Processing</li>
+                            <li class="skill-item">Image Processing</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Hardware & Tools</h3>
+                        <ul class="skill-list">
+                            <li class="skill-item">Arduino/Raspberry Pi</li>
+                            <li class="skill-item">STM32 Microcontrollers</li>
+                            <li class="skill-item">SolidWorks</li>
+                            <li class="skill-item">3D Printing</li>
+                            <li class="skill-item">PCB Design</li>
+                            <li class="skill-item">LabVIEW</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- <h3 class="section-title" style="margin-top: 3rem;">Gazebo Model Showcase</h3>
+                <div class="model-viewer">
+                    <!-- 3D Model will be loaded here -->
+                </div>
+            </section>
+             
+            <!-- Projects Section
+            <section id="projects" class="section">
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="projects-container">
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://media.licdn.com/dms/image/D5622AQEeFjQ0xJk2JQ/feedshare-shrink_800/0/1693669451279?e=1721260800&v=beta&t=1q5nQn8Z9QzG1cCwQZJ9Z9X9X9X9X9X9X9X9X9X9X" alt="Autonomous Rover">
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">Autonomous Mobile Robot</h3>
+                            <p class="project-description">
+                                Developed a ROS2-based autonomous navigation system using LIDAR and stereo vision. Implemented SLAM with RTAB-Map and custom navigation stack with dynamic obstacle avoidance.
+                            </p>
+                            <div class="project-tech">
+                                <span class="tech-tag">ROS2</span>
+                                <span class="tech-tag">Gazebo</span>
+                                <span class="tech-tag">Python</span>
+                                <span class="tech-tag">OpenCV</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="project-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                    </svg>
+                                    View Code
+                                </a>
+                                <a href="#" class="project-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                    Demo Video
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                <!--    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://media.licdn.com/dms/image/D5622AQEeFjQ0xJk2JQ/feedshare-shrink_800/0/1693669451279?e=1721260800&v=beta&t=1q5nQn8Z9QzG1cCwQZJ9Z9X9X9X9X9X9X9X9X9X9X" alt="Robotic Arm">
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">6-DOF Robotic Arm with CV</h3>
+                            <p class="project-description">
+                                Designed a 6-DOF robotic arm with computer vision capabilities using ROS and MoveIt. Implemented object recognition with YOLOv4 and grasp planning with inverse kinematics.
+                            </p>
+                            <div class="project-tech">
+                                <span class="tech-tag">ROS</span>
+                                <span class="tech-tag">MoveIt</span>
+                                <span class="tech-tag">YOLOv4</span>
+                                <span class="tech-tag">Inverse Kinematics</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="project-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                    </svg>
+                                    View Code
+                                </a>
+                                <a href="#" class="project-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                    Demo Video
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://media.licdn.com/dms/image/D5622AQEeFjQ0xJk2JQ/feedshare-shrink_800/0/1693669451279?e=1721260800&v=beta&t=1q5nQn8Z9QzG1cCwQZJ9Z9X9X9X9X9X9X9X9X9X9X" alt="Industrial Automation">
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">Industrial Automation System</h3>
+                            <p class="project-description">
+                                Developed a PLC-based industrial automation system with HMI interface for process control. Implemented safety protocols and real-time monitoring using LabVIEW and OPC UA.
+                            </p>
+                            <div class="project-tech">
+                                <span class="tech-tag">PLC</span>
+                                <span class="tech-tag">LabVIEW</span>
+                                <span class="tech-tag">OPC UA</span>
+                                <span class="tech-tag">HMI</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="project-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                    </svg>
+                                    View Code
+                                </a>
+                                <a href="#" class="project-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                    Demo Video
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+             -->
+            <!-- Experience Section -->
+           <section id="internships" class="section">
+                <h2 class="section-title">Professional Experience</h2>
+                    
+                    <div class="internship-item">
+                        <div class="internship-header">
+                            <h3 class="internship-title">AI Robotics Intern</h3>
+                            <span class="internship-date">Jan 2025 - Present</span>
+                        </div>
+                        <p class="internship-company">BHEJO,Chandigarh</p>
+                        <p class="internship-description">
+                            Developed computer vision pipelines for industrial robotics applications. Created custom YOLO models for part recognition.Optimized object detection algorithms for real-time performance.
+                        </p>
+                        <div class="internship-skills">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">OpenCV</span>
+                            <span class="tech-tag">YOLO</span>
+                            <span class="tech-tag">ROS</span>
+                        </div>
+                    </div>
+                    
+                  
+            <!-- Contact Section -->
+            <section id="contact" class="section">
+                <h2 class="section-title">Get In Touch</h2>
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                            </div>
+                            <div class="contact-text">
+                                <a href="mailto:sambhavsachdeva1210@gmail.com" class="contact-link">sambhavsachdeva1210@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                            </div>
+                            <div class="contact-text">
+                                <a href="tel:+919815970234" class="contact-link">+91 9815970234</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
+                            <div class="contact-text">
+                                Punjab Engineering College<br>
+                                Chandigarh, India
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                    <rect x="2" y="9" width="4" height="12"></rect>
+                                    <circle cx="4" cy="4" r="2"></circle>
+                                </svg>
+                            </div>
+                            <div class="contact-text">
+                                <a href="https://linkedin.com/in/sambhavsachdeva" target="_blank" class="contact-link">linkedin.com/in/sambhavsachdeva</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                </svg>
+                            </div>
+                            <div class="contact-text">
+                                <a href="https://github.com/sambhav0409" target="_blank" class="contact-link">github.com/sambhav0409</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form">
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" id="subject" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea id="message" class="form-textarea" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#about" class="footer-link">About</a>
+                    <a href="#education" class="footer-link">Education</a>
+                    <a href="#skills" class="footer-link">Skills</a>
+                    <a href="#projects" class="footer-link">Projects</a>
+                    <a href="#internships" class="footer-link">Experience</a>
+                    <a href="#contact" class="footer-link">Contact</a>
+                </div>
+                <p class="copyright">© 2023 Sambhav Sachdeva. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Interactive Terminal Widget -->
+    <div class="terminal-widget">
+        <div class="terminal-header">
+            <span>ROS2 Terminal</span>
+            <button class="terminal-close">×</button>
+        </div>
+        <div class="terminal-body" id="terminal-output">
+            <div class="terminal-line">Welcome to Sambhav's Robotics Terminal</div>
+            <div class="terminal-line">Type 'help' for available commands</div>
+            <div class="terminal-line"></div>
+            <div class="terminal-line">
+                <span class="terminal-prompt">$</span> <span class="terminal-command"></span><span class="terminal-cursor">|</span>
+            </div>
+        </div>
+        <div class="terminal-input">
+            <span class="terminal-prompt">$</span>
+            <input type="text" id="terminal-command" placeholder="Type command...">
+        </div>
+    </div>
+    
+    <!-- JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    
+    <script>
+        // Main Application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize 3D Scene
+            init3DScene();
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Initialize terminal
+            initTerminal();
+            
+            // Setup contact form
+            setupContactForm();
+            
+            // Add scroll animations
+            setupScrollAnimations();
+        });
+        
+        // 3D Scene Initialization
+        function init3DScene() {
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000814);
+            
+            const camera = new THREE.PerspectiveCamera(
+                75, 
+                window.innerWidth / window.innerHeight, 
+                0.1, 
+                1000
+            );
+            camera.position.z = 30;
+            
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('scene-container').appendChild(renderer.domElement);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x003366, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0x00a8ff, 1);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Add stars
+            const starsGeometry = new THREE.BufferGeometry();
+            const starsMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.1,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const starsVertices = [];
+            for (let i = 0; i < 5000; i++) {
+                starsVertices.push(
+                    (Math.random() - 0.5) * 2000,
+                    (Math.random() - 0.5) * 2000,
+                    (Math.random() - 0.5) * 2000
+                );
+            }
+            
+            starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+            const stars = new THREE.Points(starsGeometry, starsMaterial);
+            scene.add(stars);
+            
+            // Add floating tech orbs
+            const techIcons = ['ROS', 'Gazebo', 'Python', 'C++', 'TF', 'CV'];
+            const orbGeometry = new THREE.SphereGeometry(1, 32, 32);
+            
+            techIcons.forEach((tech, i) => {
+                const orbMaterial = new THREE.MeshPhongMaterial({
+                    color: 0x003344,
+                    emissive: 0x00f7ff,
+                    emissiveIntensity: 0.3,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                const orb = new THREE.Mesh(orbGeometry, orbMaterial);
+                orb.position.set(
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 40 - 20
+                );
+                
+                orb.userData = {
+                    isOrb: true,
+                    tech: tech
+                };
+                
+                scene.add(orb);
+            });
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate tech orbs
+                scene.children.forEach(child => {
+                    if (child.userData.isOrb) {
+                        child.rotation.x += 0.005;
+                        child.rotation.y += 0.01;
+                    }
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        // Navigation Setup
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.section');
+            
+            // Highlight active section in nav
+            function updateActiveNav() {
+                let currentSection = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+                    
+                    if (window.scrollY >= sectionTop - 200 && 
+                        window.scrollY < sectionTop + sectionHeight - 200) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${currentSection}`) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+            
+            // Smooth scrolling for nav items
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            window.addEventListener('scroll', updateActiveNav);
+            updateActiveNav();
+        }
+        
+        // Terminal Functionality
+        function initTerminal() {
+            const terminalWidget = document.querySelector('.terminal-widget');
+            const terminalClose = document.querySelector('.terminal-close');
+            const terminalCommand = document.getElementById('terminal-command');
+            const terminalOutput = document.getElementById('terminal-output');
+            
+            // Toggle terminal visibility
+            function toggleTerminal() {
+                terminalWidget.classList.toggle('active');
+                if (terminalWidget.classList.contains('active')) {
+                    terminalCommand.focus();
+                }
+            }
+            
+            // Show terminal when clicking terminal icon in footer
+            document.querySelector('.footer-links').addEventListener('click', function(e) {
+                if (e.target.classList.contains('footer-link') && 
+                    e.target.getAttribute('href') === '#terminal') {
+                    e.preventDefault();
+                    toggleTerminal();
+                }
+            });
+            
+            // Close terminal
+            terminalClose.addEventListener('click', toggleTerminal);
+            
+            // Available commands
+            const commands = {
+                help: {
+                    description: "Show available commands",
+                    execute: () => {
+                        let helpText = "Available commands:\n";
+                        helpText += "------------------------\n";
+                        helpText += "about               - Show about information\n";
+                        helpText += "education           - Show education timeline\n";
+                        helpText += "skills              - Show technical skills\n";
+                        helpText += "projects            - List robotics projects\n";
+                        helpText += "internships         - Show internship experience\n";
+                        helpText += "contact             - Display contact information\n";
+                        helpText += "clear               - Clear terminal\n";
+                        helpText += "help                - Show this help message";
+                        return helpText;
+                    }
+                },
+                about: {
+                    description: "Show about information",
+                    execute: () => {
+                        scrollToSection('about');
+                        return "Navigating to About section...";
+                    }
+                },
+                education: {
+                    description: "Show education timeline",
+                    execute: () => {
+                        scrollToSection('education');
+                        return "Navigating to Education section...";
+                    }
+                },
+                skills: {
+                    description: "Show technical skills",
+                    execute: () => {
+                        scrollToSection('skills');
+                        return "Navigating to Skills section...";
+                    }
+                },
+                projects: {
+                    description: "List robotics projects",
+                    execute: () => {
+                        scrollToSection('projects');
+                        return "Navigating to Projects section...";
+                    }
+                },
+                internships: {
+                    description: "Show internship experience",
+                    execute: () => {
+                        scrollToSection('internships');
+                        return "Navigating to Internships section...";
+                    }
+                },
+                contact: {
+                    description: "Display contact information",
+                    execute: () => {
+                        scrollToSection('contact');
+                        return "Navigating to Contact section...";
+                    }
+                },
+                clear: {
+                    description: "Clear terminal",
+                    execute: () => {
+                        clearTerminal();
+                        return "";
+                    }
+                }
+            };
+            
+            // Handle command input
+            terminalCommand.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const commandText = terminalCommand.value.trim();
+                    terminalCommand.value = '';
+                    
+                    // Add command to output
+                    addTerminalLine(`$ ${commandText}`);
+                    
+                    // Process command
+                    if (commandText in commands) {
+                        const output = commands[commandText].execute();
+                        if (output) {
+                            addTerminalLine(output);
+                        }
+                    } else if (commandText) {
+                        addTerminalLine(`Command not found: ${commandText}\nType 'help' for available commands`);
+                    }
+                    
+                    // Scroll to bottom
+                    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                }
+            });
+            
+            // Add line to terminal
+            function addTerminalLine(text) {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'terminal-line';
+                lineDiv.textContent = text;
+                terminalOutput.insertBefore(lineDiv, terminalOutput.lastElementChild);
+            }
+            
+            // Clear terminal
+            function clearTerminal() {
+                const lines = document.querySelectorAll('.terminal-line');
+                lines.forEach((line, index) => {
+                    if (index > 2) { // Keep first few lines
+                        line.remove();
+                    }
+                });
+            }
+            
+            // Scroll to section
+            function scrollToSection(sectionId) {
+                const section = document.getElementById(sectionId);
+                window.scrollTo({
+                    top: section.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // Show terminal after delay
+            setTimeout(() => {
+                terminalWidget.style.transform = 'translateY(0)';
+                terminalWidget.style.opacity = '1';
+            }, 3000);
+        }
+        
+        // Contact Form Setup
+        function setupContactForm() {
+            const contactForm = document.getElementById('contactForm');
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                
+                // Here you would typically send the form data to a server
+                // For demo purposes, we'll just show a success message
+                alert(`Thank you, ${name}! Your message has been sent. I'll get back to you soon.`);
+                
+                // Reset form
+                contactForm.reset();
+            });
+        }
+        
+        // Scroll Animations
+        function setupScrollAnimations() {
+            const animateElements = document.querySelectorAll('.skill-category, .project-card, .internship-item');
+            
+            function checkScroll() {
+                animateElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementTop < windowHeight - 100) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Initialize elements
+            animateElements.forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'all 0.5s ease';
+            });
+            
+            window.addEventListener('scroll', checkScroll);
+            window.addEventListener('load', checkScroll);
+        }
+    </script>
+</body>
+</html>
